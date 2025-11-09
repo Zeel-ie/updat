@@ -26,7 +26,7 @@ class UpdatWidget extends StatefulWidget {
   });
 
   /// This function will be invoked if provided when there is an error downloading
-  final void Function(Exception)? onDownloadError;
+  final void Function(String)? onDownloadError;
   
   ///  This function will be invoked to ckeck if there is a new version available. The return string must be a semantic version.
   final Future<String?> Function() getLatestVersion;
@@ -251,7 +251,7 @@ class _UpdatWidgetState extends State<UpdatWidget> {
         await downloadRelease(installerFile!, url, widget.appName);
       } catch (e) {
         if(widget.onDownloadError != null) {
-          widget.onDownloadError(e);
+          widget.onDownloadError!(e.toString());
         }
         setState(() {
           status = UpdatStatus.error;
