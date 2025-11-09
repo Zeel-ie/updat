@@ -19,12 +19,14 @@ class UpdatWidget extends StatefulWidget {
     this.updateDialogBuilder,
     this.getChangelog,
     this.callback,
+    this.onDownloadError,
     this.openOnDownload = true,
     this.closeOnInstall = false,
     super.key,
   });
 
-  final void Function(Exception)? onError;
+  /// This function will be invoked if provided when there is an error downloading
+  final void Function(Exception)? onDownloadError;
   
   ///  This function will be invoked to ckeck if there is a new version available. The return string must be a semantic version.
   final Future<String?> Function() getLatestVersion;
@@ -248,8 +250,8 @@ class _UpdatWidgetState extends State<UpdatWidget> {
       try {
         await downloadRelease(installerFile!, url, widget.appName);
       } catch (e) {
-        if(widget.onError != null) {
-          widget.onError(e);
+        if(widget.onDownloadError != null) {
+          widget.onDownloadError(e);
         }
         setState(() {
           status = UpdatStatus.error;
