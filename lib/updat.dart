@@ -24,6 +24,8 @@ class UpdatWidget extends StatefulWidget {
     super.key,
   });
 
+  final void Function(Exception)? onError;
+  
   ///  This function will be invoked to ckeck if there is a new version available. The return string must be a semantic version.
   final Future<String?> Function() getLatestVersion;
 
@@ -246,6 +248,9 @@ class _UpdatWidgetState extends State<UpdatWidget> {
       try {
         await downloadRelease(installerFile!, url, widget.appName);
       } catch (e) {
+        if(widget.onError != null) {
+          widget.onError(e);
+        }
         setState(() {
           status = UpdatStatus.error;
         });
